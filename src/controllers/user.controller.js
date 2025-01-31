@@ -115,13 +115,13 @@ const loginUser = asyncHandler(async (req, res) => {
   const { email, username, password } = req.body;
 
   // 👉 checking if there aren't any empty fields
-  if (!email || !username) {
+  if (!(email || username)) {
     throw new ApiError(400, "Please provide email or username");
   }
 
   // 👉 checking if user exists
   const user = await User.findOne({
-    $or: [{ username: username.toLowerCase() }, { email }],
+    $or: [{ username: username?.toLowerCase() }, { email }],
   });
 
   if (!user) {
