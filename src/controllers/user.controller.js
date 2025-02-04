@@ -261,4 +261,41 @@ const changeCurrentUserPassword = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, {}, "Password changed successfully"));
 });
 
-export { registerUser, loginUser, logoutUser, refreshAccessToken };
+const getCurrentUser = asyncHandler(async (req, res) => {
+  return res
+    .status(200)
+    .json(new ApiResponse(200, req.user, "User details fetched successfully"));
+});
+
+const updateAccountDetails = asyncHandler(async (req, res) => {
+  const userId = req.user?._id;
+  const { fullName, username } = req.body;
+
+  if (!fullName?.trim() || !username?.trim()) {
+    throw new ApiError(400, "Full name and username are required");
+  }
+
+  const user = await User.findByIdAndUpdate(
+    userId,
+    { $set: { fullName, username } },
+    { new: true }
+  ).select("-password -refreshToken -watchHistory");
+
+  if (!user) {
+    throw new ApiError(500, "Something went wrong while updating the user");
+  }
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, user, "Account details updated successfully"));
+});
+
+export {
+  registerUser,
+  loginUser,
+  logoutUser,
+  refreshAccessToken,
+  getCurrentUser,
+  changeCurrentUserPassword,
+  updateAccountDetails,
+};
