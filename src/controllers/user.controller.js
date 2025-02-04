@@ -242,4 +242,23 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
   }
 });
 
+const changeCurrentUserPassword = asyncHandler(async (req, res) => {
+  const { currentPassword, newPassword } = req.body;
+  const userId = req.user?._id;
+
+  const user = await User.findById(userId);
+
+  const isPasswordCorrect = await user.isPasswordCorrect(currentPassword);
+  if (!isPasswordCorrect) {
+    throw new ApiError(401, "Invalid password");
+  }
+
+  user.password = newPassword; // this will trigger the pre save hook to hash the password
+  await user.save({ validateBeforeSave: false });
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, {}, "Password changed successfully"));
+});
+
 export { registerUser, loginUser, logoutUser, refreshAccessToken };
