@@ -313,6 +313,8 @@ const updateUserAvatar = asyncHandler(async (req, res) => {
     throw new ApiError(500, "Something went wrong while updating the user");
   }
 
+  deleteOldImageFromCloudinary(req.user.avatar);
+
   return res
     .status(200)
     .json(new ApiResponse(200, user, "Avatar updated successfully"));
@@ -343,6 +345,8 @@ const updateUserCoverImage = asyncHandler(async (req, res) => {
   if (!user) {
     throw new ApiError(500, "Something went wrong while updating the user");
   }
+
+  deleteOldImageFromCloudinary(req.user.coverImage);
 
   return res
     .status(200)
