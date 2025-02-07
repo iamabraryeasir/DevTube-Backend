@@ -85,17 +85,17 @@ const getUserChannelSubscribers = asyncHandler(async (req, res) => {
 
 // controller to return channel list to which user has subscribed
 const getSubscribedChannels = asyncHandler(async (req, res) => {
-  const { subscriberId } = req.params;
+  const { channelId } = req.params;
 
   // check if user exists
-  const user = await User.findById(subscriberId);
+  const user = await User.findById(channelId);
 
   if (!user) {
     throw new ApiError(404, "User not found");
   }
 
   // get subscribed channels of the user
-  const subscribedChannels = await Subscription.find({ user: subscriberId })
+  const subscribedChannels = await Subscription.find({ user: channelId })
     .populate("channel", "name email")
     .exec(); // populate channel field with name and email
 
@@ -104,7 +104,7 @@ const getSubscribedChannels = asyncHandler(async (req, res) => {
     .json(
       new ApiResponse(
         200,
-        { subscribedChannels },
+        subscribedChannels,
         "Subscribed channels fetched successfully"
       )
     );
