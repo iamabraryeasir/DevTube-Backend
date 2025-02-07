@@ -1,6 +1,5 @@
 import { isValidObjectId } from "mongoose";
 import { Tweet } from "../models/tweet.model.js";
-import { User } from "../models/user.model.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
@@ -51,6 +50,18 @@ const getUserTweets = asyncHandler(async (req, res) => {
       {
         $unwind: "$owner",
       },
+      {
+        $project: {
+          _id: 1,
+          content: 1,
+          owner: {
+            _id: 1,
+            username: 1,
+          },
+          createdAt: 1,
+          updatedAt: 1,
+        },
+      },
     ]);
 
     return res
@@ -64,7 +75,8 @@ const getUserTweets = asyncHandler(async (req, res) => {
 const updateTweet = asyncHandler(async (req, res) => {
   try {
     const userId = req.user._id;
-    const { tweetId, content } = req.body;
+    const tweetId = req.params.tweetId;
+    const { content } = req.body;
 
     const tweet = await Tweet.findById(tweetId);
 
@@ -95,7 +107,7 @@ const updateTweet = asyncHandler(async (req, res) => {
 const deleteTweet = asyncHandler(async (req, res) => {
   try {
     const userId = req.user._id;
-    const tweetId = req.body.tweetId;
+    const tweetId = req.params.tweetId;
 
     if (!tweetId) {
       throw new ApiError(400, "Tweet ID is required");
@@ -111,7 +123,7 @@ const deleteTweet = asyncHandler(async (req, res) => {
       throw new ApiError(403, "You are not authorized to delete this tweet");
     }
 
-    await Tweet.findByIdAndDelete(tweetId);
+    await Tweet.deleteOne({ _id: tweetId });
 
     return res
       .status(200)
