@@ -1,0 +1,38 @@
+-----------------------------------
+              user 01: 
+-----------------------------------
+username:codeWizard99  
+email:codewizard99@example.com  
+password:hashedpassword102  
+fullName:John Smith  
+-----------------------------------
+
+
+-----------------------------------
+              user 02: 
+-----------------------------------
+username:devMasterX
+email:devmasterx@example.com
+password:hashedpassword103
+fullName:Emily Davis
+-----------------------------------
+
+
+-----------------------------------
+              user 03: 
+-----------------------------------
+username:techGuru77
+email:techguru77@example.com
+password:hashedpassword104
+fullName:Michael Brown
+-----------------------------------
+
+
+-----------------------------------
+              user 04: 
+-----------------------------------
+username:aiNerdPro
+email:ainerdpro@example.com
+password:hashedpassword105
+fullName:Sophia Wilson
+-----------------------------------
